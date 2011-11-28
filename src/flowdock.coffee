@@ -2,14 +2,6 @@ Robot    = require("hubot").robot()
 flowdock = require "flowdock"
 
 class Flowdock extends Robot.Adapter
-  constructor: (robot) ->
-    @login_email    = process.env.HUBOT_FLOWDOCK_LOGIN_EMAIL
-    @login_password = process.env.HUBOT_FLOWDOCK_LOGIN_PASSWORD
-    unless @login_email && @login_password
-      console.error "ERROR: No credentials in environment variables HUBOT_FLOWDOCK_LOGIN_EMAIL and HUBOT_FLOWDOCK_LOGIN_PASSWORD"
-      @emit "error", "No credentials"
-    super robot
-
   send: (user, strings...) ->
     strings.forEach (str) =>
       @bot.chatMessage(user.flow.subdomain, user.flow.name, str)
@@ -19,6 +11,14 @@ class Flowdock extends Robot.Adapter
       @send user, "#{user.name}: #{str}"
 
   run: ->
+    self = @
+
+    @login_email    = process.env.HUBOT_FLOWDOCK_LOGIN_EMAIL
+    @login_password = process.env.HUBOT_FLOWDOCK_LOGIN_PASSWORD
+    unless @login_email && @login_password
+      console.error "ERROR: No credentials in environment variables HUBOT_FLOWDOCK_LOGIN_EMAIL and HUBOT_FLOWDOCK_LOGIN_PASSWORD"
+      @emit "error", "No credentials"
+
     bot = new flowdock.Session(@login_email, @login_password)
     bot.fetchFlows((flows) =>
       flows.forEach (flow) =>
