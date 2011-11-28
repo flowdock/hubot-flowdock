@@ -13,7 +13,7 @@
     "url" : "http://github.com/flowdock/hubot-flowdock.git"
   },
   "dependencies": {
-    "hubot": "2.0.0",
+    "hubot": "2.0",
     "flowdock": "0.2.x"
   },
   "devDependencies": {
