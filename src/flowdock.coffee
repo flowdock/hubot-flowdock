@@ -1,7 +1,8 @@
 Robot    = require("hubot").robot()
+Adapter  = require("hubot").adapter()
 flowdock = require "flowdock"
 
-class Flowdock extends Robot.Adapter
+class Flowdock extends Adapter
   send: (user, strings...) ->
     strings.forEach (str) =>
       @bot.chatMessage(user.flow.subdomain, user.flow.name, str)
