@@ -1,6 +1,6 @@
 {
   "name": "hubot-flowdock",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Flowdock",
   "keywords": "hubot flowdock adapter",
   "description": "A Flowdock adapter for hubot",
