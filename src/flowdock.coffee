@@ -12,7 +12,7 @@ class Flowdock extends Adapter
 
   connect: ->
     ids = (flow.id for flow in @flows)
-    @stream = @bot.stream(ids)
+    @stream = @bot.stream(ids, active: 'idle')
     @stream.on 'message', (message) =>
       return unless message.event == 'message'
       author =
