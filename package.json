@@ -13,7 +13,7 @@
     "url" : "http://github.com/flowdock/hubot-flowdock.git"
   },
   "dependencies": {
-    "flowdock": "0.3.2"
+    "flowdock": "0.4.0"
   },
   "devDependencies": {
     "coffee-script": ">=1.2.0"
