@@ -1,7 +1,20 @@
 {
   "name": "hubot-flowdock",
   "version": "0.2.3",
-  "author": "Flowdock",
+  "author": {
+    "name": "Flowdock",
+    "url" : "https://www.flowdock.com/"
+  },
+  "contributors": [
+    {
+      "name" : "Arttu Tervo",
+      "email" : "arttu.tervo@gmail.com"
+    },
+    {
+      "name" : "Ville Lautanala",
+      "email" : "lautis@gmail.com"
+    }
+  ],
   "keywords": ["hubot", "flowdock", "adapter"],
   "description": "A Flowdock adapter for hubot",
   "licenses": [{
@@ -12,6 +25,10 @@
     "type" : "git",
     "url" : "http://github.com/flowdock/hubot-flowdock.git"
   },
+  "bugs": {
+    "url": "https://github.com/flowdock/hubot-flowdock/issues",
+    "email": "team@flowdock.com"
+  }
   "dependencies": {
     "flowdock": "0.4.0"
   },
