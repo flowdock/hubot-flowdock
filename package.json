@@ -28,7 +28,7 @@
   "bugs": {
     "url": "https://github.com/flowdock/hubot-flowdock/issues",
     "email": "team@flowdock.com"
-  }
+  },
   "dependencies": {
     "flowdock": "0.4.0"
   },
@@ -36,5 +36,7 @@
     "coffee-script": ">=1.2.0"
   },
   "main": "./src/flowdock",
-  "engine": "node > 0.6.0 < 0.7.0"
+  "engines": {
+    "node": ">=0.4.7"
+  }
 }
