@@ -30,7 +30,7 @@
     "email": "team@flowdock.com"
   },
   "dependencies": {
-    "flowdock": "0.4.1"
+    "flowdock": "0.4.x"
   },
   "devDependencies": {
     "coffee-script": ">=1.2.0"
