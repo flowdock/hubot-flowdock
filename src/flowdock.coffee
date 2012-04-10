@@ -41,5 +41,7 @@ class Flowdock extends Adapter
 
     @bot
 
+    @emit 'connected'
+
 exports.use = (robot) ->
   new Flowdock robot
