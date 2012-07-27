@@ -1,6 +1,5 @@
-Robot    = require("hubot").robot()
-Adapter  = require("hubot").adapter()
-flowdock = require "flowdock"
+{Adapter,TextMessage} = require 'hubot'
+flowdock              = require 'flowdock'
 
 class Flowdock extends Adapter
   send: (user, strings...) ->
@@ -19,7 +18,7 @@ class Flowdock extends Adapter
         name: @userForId(message.user).name
         flow: message.flow
       return if @name == author.name
-      @receive new Robot.TextMessage(author, message.content)
+      @receive new TextMessage(author, message.content)
 
   run: ->
     @login_email    = process.env.HUBOT_FLOWDOCK_LOGIN_EMAIL
