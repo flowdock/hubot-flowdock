@@ -1,6 +1,6 @@
 {
   "name": "hubot-flowdock",
-  "version": "0.2.5",
+  "version": "0.3.0",
   "author": {
     "name": "Flowdock",
     "url" : "https://www.flowdock.com/"
