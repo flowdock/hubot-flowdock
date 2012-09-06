@@ -7,7 +7,7 @@ class Flowdock extends Adapter
 
   reply: (user, strings...) ->
     strings.forEach (str) =>
-      @send user, "#{user.name}: #{str}"
+      @send user, "@#{user.name}: #{str}"
 
   connect: ->
     ids = (flow.id for flow in @flows)
