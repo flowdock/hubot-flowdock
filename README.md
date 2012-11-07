@@ -2,7 +2,7 @@
 
 ### Compatibility with Hubot
 
- * 0.3.0 => Hubot 2.3.x
+ * 0.3.x => Hubot 2.3.x
  * 0.2.5 => Hubot 2.2.x
 
 ### Install
