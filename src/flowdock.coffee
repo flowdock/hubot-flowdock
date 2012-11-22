@@ -15,6 +15,7 @@ class Flowdock extends Adapter
     @stream.on 'message', (message) =>
       return unless message.event == 'message'
       author =
+        id: message.user
         name: @userForId(message.user).name
         flow: message.flow
       return if @robot.name == author.name
