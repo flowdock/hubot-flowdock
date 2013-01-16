@@ -18,7 +18,7 @@ class Flowdock extends Adapter
         id: message.user
         name: @userForId(message.user).name
         flow: message.flow
-      return if @robot.name == author.name
+      return if @robot.name.toLowerCase() == author.name.toLowerCase()
       @receive new TextMessage(author, message.content)
 
   run: ->
