@@ -21,7 +21,7 @@ class Flowdock extends Adapter
       return if @robot.name.toLowerCase() == author.name.toLowerCase()
       # Reformat leading @mention name to be like "name: message" which is
       # what hubot expects
-      regex = new RegExp("^@#{@robot.name}\\b", "i")
+      regex = new RegExp("^@#{@robot.name}(,|\\b)", "i")
       hubot_msg = message.content.replace(regex, "#{@robot.name}: ")
       @receive new TextMessage(author, hubot_msg)
 
