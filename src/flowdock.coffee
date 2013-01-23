@@ -2,12 +2,19 @@
 flowdock              = require 'flowdock'
 
 class Flowdock extends Adapter
-  send: (user, strings...) ->
+  send: (params, strings...) ->
+    user = @userFromParams(params)
     @bot.message user.flow, str for str in strings
 
-  reply: (user, strings...) ->
+  reply: (params, strings...) ->
+    user = @userFromParams(params)
     strings.forEach (str) =>
-      @send user, "@#{user.name}: #{str}"
+      @send params, "@#{user.name}: #{str}"
+
+  userFromParams: (params) ->
+    # hubot < 2.4.2: params = user
+    # hubot >= 2.4.2: params = {user: user, ...}
+    if params.user then params.user else params
 
   connect: ->
     ids = (flow.id for flow in @flows)
