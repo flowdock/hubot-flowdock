@@ -4,7 +4,11 @@ flowdock              = require 'flowdock'
 class Flowdock extends Adapter
   send: (params, strings...) ->
     user = @userFromParams(params)
-    @bot.message user.flow, str for str in strings
+    for str in strings
+      if str.length > 8095
+        str = "** Truncated **\n" + str
+        str = str[0..8095]
+      @bot.message user.flow, str
 
   reply: (params, strings...) ->
     user = @userFromParams(params)
