@@ -5,9 +5,9 @@ class Flowdock extends Adapter
   send: (params, strings...) ->
     user = @userFromParams(params)
     for str in strings
-      if str.length > 8095
-        str = "** Truncated **\n" + str
-        str = str[0..8095]
+      if str.length > 8096
+        str = "** End of Message Truncated **\n" + str
+        str = str[0...8096]
       @bot.message user.flow, str
 
   reply: (params, strings...) ->
