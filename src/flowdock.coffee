@@ -8,10 +8,10 @@ class Flowdock extends Adapter
       if str.length > 8096
         str = "** End of Message Truncated **\n" + str
         str = str[0...8096]
-      if user.id
-        @bot.privateMessage user.id, str
-      else if user.flow
+      if user.flow
         @bot.message user.flow, str
+      else if user.id
+        @bot.privateMessage user.id, str
 
   reply: (params, strings...) ->
     user = @userFromParams(params)
