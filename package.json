@@ -40,7 +40,7 @@
     "email": "team@flowdock.com"
   },
   "dependencies": {
-    "flowdock": "git://github.com/flowdock/node-flowdock.git#send-private-messages"
+    "flowdock": "0.5.x"
   },
   "devDependencies": {
     "coffee-script": ">=1.2.0"
