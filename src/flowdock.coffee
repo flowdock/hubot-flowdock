@@ -25,8 +25,8 @@ class Flowdock extends Adapter
 
   userFromId: (id, data) ->
     # hubot < 2.5.0: @userForId
-    # hubot >=2.5.0: @bot.brain.userForId
-    @bot.brain.userForId?(id, data) || @userForId(id, data)
+    # hubot >=2.5.0: @robot.brain.userForId
+    @robot.brain?.userForId?(id, data) || @userForId(id, data)
 
   connect: ->
     ids = (flow.id for flow in @flows)
