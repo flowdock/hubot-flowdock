@@ -23,6 +23,11 @@ class Flowdock extends Adapter
     # hubot >= 2.4.2: params = {user: user, ...}
     if params.user then params.user else params
 
+  userFromId: (id, data) ->
+    # hubot < 2.5.0: @userForId
+    # hubot >=2.5.0: @bot.brain.userForId
+    @bot.brain.userForId?(id, data) || @userForId(id, data)
+
   connect: ->
     ids = (flow.id for flow in @flows)
     @stream = @bot.stream(ids, active: 'idle', user: 1)
@@ -30,7 +35,7 @@ class Flowdock extends Adapter
       return unless message.event == 'message'
       author =
         id: message.user
-        name: @bot.brain.userForId(message.user).name
+        name: @userFromId(message.user).name
         flow: message.flow
       return if @robot.name.toLowerCase() == author.name.toLowerCase()
       # Reformat leading @mention name to be like "name: message" which is
@@ -54,7 +59,7 @@ class Flowdock extends Adapter
           data =
             id: user.id
             name: user.nick
-          @userForId user.id, data
+          @userFromId user.id, data
       @connect()
 
     @bot
