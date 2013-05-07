@@ -38,11 +38,15 @@ class Flowdock extends Adapter
         name: @userFromId(message.user).name
         flow: message.flow
       return if @robot.name.toLowerCase() == author.name.toLowerCase()
+
       # Reformat leading @mention name to be like "name: message" which is
-      # what hubot expects
+      # what hubot expects. Add bot name with private messages if not already given.
+      botPrefix = "#{@robot.name}: "
       regex = new RegExp("^@#{@robot.name}(,|\\b)", "i")
-      hubot_msg = message.content.replace(regex, "#{@robot.name}: ")
-      @receive new TextMessage(author, hubot_msg)
+      hubotMsg = message.content.replace(regex, botPrefix)
+      if !message.flow && !hubotMsg.match(new RegExp("^#{@robot.name}", "i"))
+        hubotMsg = botPrefix + hubotMsg
+      @receive new TextMessage(author, hubotMsg)
 
   run: ->
     @login_email    = process.env.HUBOT_FLOWDOCK_LOGIN_EMAIL
