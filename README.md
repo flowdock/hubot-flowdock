@@ -2,7 +2,8 @@
 
 ### Compatibility with Hubot
 
- * 0.4.x => Hubot >=2.4.2
+ * 0.5.x => Hubot >=2.4.8
+ * 0.4.x => Hubot 2.4.2 - 2.4.8
  * 0.3.x => Hubot 2.3.x
  * 0.2.5 => Hubot 2.2.x
 
