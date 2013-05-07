@@ -13,6 +13,10 @@
     {
       "name": "Ville Lautanala",
       "email": "lautis@gmail.com"
+    },
+    {
+      "name": "Antti Pitkanen",
+      "email": "apitkane@gmail.com"
     }
   ],
   "keywords": [
@@ -36,7 +40,7 @@
     "email": "team@flowdock.com"
   },
   "dependencies": {
-    "flowdock": "0.4.x"
+    "flowdock": "0.5.x"
   },
   "devDependencies": {
     "coffee-script": ">=1.2.0"

@@ -8,7 +8,10 @@ class Flowdock extends Adapter
       if str.length > 8096
         str = "** End of Message Truncated **\n" + str
         str = str[0...8096]
-      @bot.message user.flow, str
+      if user.flow
+        @bot.message user.flow, str
+      else if user.id
+        @bot.privateMessage user.id, str
 
   reply: (params, strings...) ->
     user = @userFromParams(params)
@@ -20,14 +23,19 @@ class Flowdock extends Adapter
     # hubot >= 2.4.2: params = {user: user, ...}
     if params.user then params.user else params
 
+  userFromId: (id, data) ->
+    # hubot < 2.5.0: @userForId
+    # hubot >=2.5.0: @robot.brain.userForId
+    @robot.brain?.userForId?(id, data) || @userForId(id, data)
+
   connect: ->
     ids = (flow.id for flow in @flows)
-    @stream = @bot.stream(ids, active: 'idle')
+    @stream = @bot.stream(ids, active: 'idle', user: 1)
     @stream.on 'message', (message) =>
       return unless message.event == 'message'
       author =
         id: message.user
-        name: @userForId(message.user).name
+        name: @userFromId(message.user).name
         flow: message.flow
       return if @robot.name.toLowerCase() == author.name.toLowerCase()
       # Reformat leading @mention name to be like "name: message" which is
@@ -51,7 +59,7 @@ class Flowdock extends Adapter
           data =
             id: user.id
             name: user.nick
-          @userForId user.id, data
+          @userFromId user.id, data
       @connect()
 
     @bot
