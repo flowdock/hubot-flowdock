@@ -18,7 +18,9 @@ You should report any issues or submit any pull requests to the
 
 ## Getting Started
 
-First you will need to edit the `package.json` for your hubot and add the
+First, create your own hubot template by using [the getting started instructions](https://github.com/github/hubot/blob/master/docs/README.md) of the hubot repository.
+
+Then you will need to edit the `package.json` for your hubot and add the
 `hubot-flowdock` adapter dependency.
 
     "dependencies": {
@@ -69,10 +71,6 @@ Your Hubot instance's hostname in Heroku.
     % export HUBOT_FLOWDOCK_LOGIN_EMAIL="..."
 
     % export HUBOT_FLOWDOCK_LOGIN_PASSWORD="..."
-
-### Configuring the variables on Windows
-
-Coming soon!
 
 ## License
 
