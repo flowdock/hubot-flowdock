@@ -32,18 +32,20 @@ class Flowdock extends Adapter
     ids = (flow.id for flow in @flows)
     @stream = @bot.stream(ids, active: 'idle', user: 1)
     @stream.on 'message', (message) =>
-      return unless message.event == 'message'
+      return unless message.event in ['message', 'comment']
       author =
         id: message.user
         name: @userFromId(message.user).name
         flow: message.flow
       return if @robot.name.toLowerCase() == author.name.toLowerCase()
 
+      msg = if message.event == 'comment' then message.content.text else message.content
+
       # Reformat leading @mention name to be like "name: message" which is
       # what hubot expects. Add bot name with private messages if not already given.
       botPrefix = "#{@robot.name}: "
       regex = new RegExp("^@#{@robot.name}(,|\\b)", "i")
-      hubotMsg = message.content.replace(regex, botPrefix)
+      hubotMsg = msg.replace(regex, botPrefix)
       if !message.flow && !hubotMsg.match(new RegExp("^#{@robot.name}", "i"))
         hubotMsg = botPrefix + hubotMsg
       @receive new TextMessage(author, hubotMsg)
