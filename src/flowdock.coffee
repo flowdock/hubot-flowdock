@@ -2,16 +2,29 @@
 flowdock              = require 'flowdock'
 
 class Flowdock extends Adapter
+  constructor: ->
+    @flowsByName = {}
+    super
+
   send: (params, strings...) ->
-    user = @userFromParams(params)
-    for str in strings
+    for str, i in strings
       if str.length > 8096
         str = "** End of Message Truncated **\n" + str
         str = str[0...8096]
-      if user.flow
-        @bot.message user.flow, str
-      else if user.id
-        @bot.privateMessage user.id, str
+        strings[i] = str
+
+    if params.user
+      user = @userFromParams(params)
+      for str in strings
+        if user.flow
+          @bot.message user.flow, str
+        else if user.id
+          @bot.privateMessage user.id, str
+    else if params.room
+      flow = @flowFromParams(params)
+      return new Error("Flow not found") if !flow
+      for str in strings
+        @bot.message flow.id, str
 
   reply: (params, strings...) ->
     user = @userFromParams(params)
@@ -22,6 +35,9 @@ class Flowdock extends Adapter
     # hubot < 2.4.2: params = user
     # hubot >= 2.4.2: params = {user: user, ...}
     if params.user then params.user else params
+
+  flowFromParams: (params) ->
+    @flowsByName[params.room.toLowerCase()]
 
   userFromId: (id, data) ->
     # hubot < 2.5.0: @userForId
@@ -60,7 +76,9 @@ class Flowdock extends Adapter
     @bot = new flowdock.Session(@login_email, @login_password)
     @bot.flows (flows) =>
       @flows = flows
+      @flowsByName = {}
       for flow in flows
+        @flowsByName[flow.name.toLowerCase()] = flow
         for user in flow.users
           data =
             id: user.id
