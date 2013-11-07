@@ -3,7 +3,7 @@ flowdock              = require 'flowdock'
 
 class Flowdock extends Adapter
   constructor: ->
-    @flowsByName = {}
+    @flowsByParametrizedNames = {}
     super
 
   send: (params, strings...) ->
@@ -37,7 +37,7 @@ class Flowdock extends Adapter
     if params.user then params.user else params
 
   flowFromParams: (params) ->
-    @flowsByName[params.room.toLowerCase()]
+    @flowsByParametrizedNames[params.room]
 
   userFromId: (id, data) ->
     # hubot < 2.5.0: @userForId
@@ -76,9 +76,9 @@ class Flowdock extends Adapter
     @bot = new flowdock.Session(@login_email, @login_password)
     @bot.flows (flows) =>
       @flows = flows
-      @flowsByName = {}
+      @flowsByParametrizedNames = {}
       for flow in flows
-        @flowsByName[flow.name.toLowerCase()] = flow
+        @flowsByParametrizedNames["#{flow.organization.parameterized_name}/#{flow.parameterized_name}"] = flow
         for user in flow.users
           data =
             id: user.id
