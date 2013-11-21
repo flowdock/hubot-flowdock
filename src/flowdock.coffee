@@ -15,9 +15,14 @@ class Flowdock extends Adapter
 
     if params.user
       user = @userFromParams(params)
+
       for str in strings
         if user.flow
-          @bot.message user.flow, str
+          if user.message and not (params.newMessage? and params.newMessage)
+            # respond via comment if we have a parent message
+            @bot.comment user.flow, user.message, str
+          else
+            @bot.message user.flow, str
         else if user.id
           @bot.privateMessage user.id, str
     else if params.room
@@ -49,10 +54,23 @@ class Flowdock extends Adapter
     @stream = @bot.stream(ids, active: 'idle', user: 1)
     @stream.on 'message', (message) =>
       return unless message.event in ['message', 'comment']
+      if message.event == 'message'
+        messageId = message.id
+      else
+        # For comments the parent message id is embedded in an 'influx' tag
+        if message.tags
+          influxTag = do ->
+            for tag in message.tags
+              return tag if /^influx:/.test tag
+          messageId = (influxTag.split ':', 2)[1] if influxTag
+
       author =
         id: message.user
         name: @userFromId(message.user).name
         flow: message.flow
+
+      author['message'] = messageId if messageId
+
       return if @robot.name.toLowerCase() == author.name.toLowerCase()
 
       msg = if message.event == 'comment' then message.content.text else message.content
