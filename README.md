@@ -44,7 +44,7 @@ The Flowdock adapter requires only the following environment variables.
     
     # Heroku specific: to enable the keep-alive functionality for Hubot > 2.1.4.
     # More info at https://github.com/github/hubot/pull/270.
-    HEROKU_HOSTNAME
+    HEROKU_URL
 
 ### Flowdock Login Email
 
