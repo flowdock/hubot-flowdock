@@ -49,10 +49,16 @@ class Flowdock extends Adapter
     # hubot >=2.5.0: @robot.brain.userForId
     @robot.brain?.userForId?(id, data) || @userForId(id, data)
 
+  changeUserNick: (id, newNick) ->
+    if id of @robot.brain.data.users
+      @robot.brain.data.users[id].name = newNick
+
   connect: ->
     ids = (flow.id for flow in @flows)
     @stream = @bot.stream(ids, active: 'idle', user: 1)
     @stream.on 'message', (message) =>
+      if message.event == 'user-edit'
+        @changeUserNick(message.content.user.id, message.content.user.nick)
       return unless message.event in ['message', 'comment']
       if message.event == 'message'
         messageId = message.id
