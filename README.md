@@ -7,6 +7,7 @@ You should report any issues or submit any pull requests to the
 
 ## Compatibility with Hubot
 
+ * 0.6.x => Hubot >=2.5.0
  * 0.5.x => Hubot >=2.4.8
  * 0.4.x => Hubot 2.4.2 - 2.4.8
  * 0.3.x => Hubot 2.3.x
@@ -41,20 +42,18 @@ The Flowdock adapter requires only the following environment variables.
 
     HUBOT_FLOWDOCK_LOGIN_EMAIL
     HUBOT_FLOWDOCK_LOGIN_PASSWORD
-    
+
     # Heroku specific: to enable the keep-alive functionality for Hubot > 2.1.4.
     # More info at https://github.com/github/hubot/pull/270.
     HEROKU_URL
 
 ### Flowdock Login Email
 
-This is the email address of the account which your hubot will be using. Make
-a note of it.
+This is the email address of the account which your hubot will be using.
 
 ### Flowdock Login Password
 
-This is the password of the account which your hubot will be using. Make a note
-of it.
+This is the password of the account which your hubot will be using. Note: if you use third party authentication (e.g. Google), you need to [set a password for your account manually](https://www.flowdock.com/account/authorizations).
 
 ### Heroku Hostname
 

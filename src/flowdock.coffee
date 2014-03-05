@@ -98,6 +98,13 @@ class Flowdock extends Adapter
       @emit "error", "No credentials"
 
     @bot = new flowdock.Session(@login_email, @login_password)
+    @bot.on "error", (e) =>
+      if e == 401
+        console.error "Could not authenticate, please check your credentials"
+      else
+        console.error "Unexpected error in creating Flowdock session: #{e}"
+      @emit e
+
     @bot.flows (flows) =>
       @flows = flows
       @flowsByParametrizedNames = {}
