@@ -109,13 +109,12 @@ class Flowdock extends Adapter
       @flows = flows
       @flowsByParametrizedNames = {}
       for flow in flows
-        parametrizedName = "#{flow.organization.parameterized_name}/#{flow.parameterized_name}"
-        @flowsByParametrizedNames[parametrizedName] = flow
+        @flowsByParametrizedNames["#{flow.organization.parameterized_name}/#{flow.parameterized_name}"] = flow
         for user in flow.users
           data =
             id: user.id
             name: user.nick
-            room: parametrizedName
+            room: Date.now()
           @userFromId user.id, data
       @connect()
 
