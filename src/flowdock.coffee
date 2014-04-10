@@ -114,6 +114,7 @@ class Flowdock extends Adapter
           data =
             id: user.id
             name: user.nick
+            room: Date.now()
           @userFromId user.id, data
       @connect()
 
