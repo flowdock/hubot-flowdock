@@ -21,7 +21,7 @@ class Flowdock extends Adapter
           if user.thread_id
             # respond to a thread
             @bot.threadMessage user.flow, user.thread_id, str
-          else if user.message and not params.newMessage?
+          else if user.message and not (params.newMessage? and params.newMessage)
             # respond via comment if we have a parent message
             @bot.comment user.flow, user.message, str
           else
