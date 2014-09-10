@@ -18,7 +18,10 @@ class Flowdock extends Adapter
 
       for str in strings
         if user.flow
-          if user.message and not (params.newMessage? and params.newMessage)
+          if user.thread_id
+            # respond to a thread
+            @bot.threadMessage user.flow, user.thread_id, str
+          else if user.message and not params.newMessage?
             # respond via comment if we have a parent message
             @bot.comment user.flow, user.message, str
           else
@@ -76,6 +79,7 @@ class Flowdock extends Adapter
         flow: message.flow
 
       author['message'] = messageId if messageId
+      author['thread_id'] = message.thread_id
 
       return if @robot.name.toLowerCase() == author.name.toLowerCase()
 
