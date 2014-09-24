@@ -36,6 +36,10 @@ If deploying to Heroku you will need to edit the `Procfile` and change the
 `-a campfire` option to `-a flowdock`. Or if you're deploying locally
 you will need to use `-a flowdock` when running your hubot.
 
+### Bot name
+
+Note that by default, hubot will think it is named "Hubot" and will only respond to that name. You can configure what name hubot thinks it has, with environment variable HUBOT_NAME or with the `-n` flag when starting the bot. Note that you will run into problems if the name that hubot internally uses is different from the actual display name of the user that hubot uses to connect to Flowdock with.
+
 ## Configuring the Adapter
 
 The Flowdock adapter requires only the following environment variables.
@@ -46,6 +50,10 @@ The Flowdock adapter requires only the following environment variables.
     # Heroku specific: to enable the keep-alive functionality for Hubot > 2.1.4.
     # More info at https://github.com/github/hubot/pull/270.
     HEROKU_URL
+
+### Name
+
+Remember to set the bot's name to match the Flowdock login's display name. See "Bot name" above.
 
 ### Flowdock Login Email
 
@@ -70,6 +78,16 @@ Your Hubot instance's hostname in Heroku.
     % export HUBOT_FLOWDOCK_LOGIN_EMAIL="..."
 
     % export HUBOT_FLOWDOCK_LOGIN_PASSWORD="..."
+
+## API
+
+### Flows
+
+If you need to access data about flows, you can find them in `robot.adapter.flows`.
+
+### Comments vs. normal messages
+
+By default hubot will always respond to the same thread that the message that caused the response was in. In scripts you can override this by setting `msg.envelope.newMessage = true`.
 
 ## License
 
