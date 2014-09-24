@@ -45,7 +45,7 @@ class Flowdock extends Adapter
     if params.user then params.user else params
 
   flowFromParams: (params) ->
-    @flowsByParametrizedNames[params.room]
+    return flow for flow in @flows when params.room == flow.id
 
   userFromId: (id, data) ->
     # hubot < 2.5.0: @userForId
@@ -92,6 +92,7 @@ class Flowdock extends Adapter
       hubotMsg = msg.replace(regex, botPrefix)
       if !message.flow && !hubotMsg.match(new RegExp("^#{@robot.name}", "i"))
         hubotMsg = botPrefix + hubotMsg
+      author.room = message.flow
       @receive new TextMessage(author, hubotMsg)
 
   run: ->
@@ -111,9 +112,7 @@ class Flowdock extends Adapter
 
     @bot.flows (flows) =>
       @flows = flows
-      @flowsByParametrizedNames = {}
       for flow in flows
-        @flowsByParametrizedNames["#{flow.organization.parameterized_name}/#{flow.parameterized_name}"] = flow
         for user in flow.users
           data =
             id: user.id
