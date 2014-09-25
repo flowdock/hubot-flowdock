@@ -38,7 +38,7 @@ you will need to use `-a flowdock` when running your hubot.
 
 ### Bot name
 
-Note that by default, hubot will think it is named "Hubot" and will only respond to that name. You can configure what name hubot thinks it has, with environment variable HUBOT_NAME or with the `-n` flag when starting the bot. Note that you will run into problems if the name that hubot internally uses is different from the actual display name of the user that hubot uses to connect to Flowdock with.
+Note that by default, hubot will think its name is "Hubot" and will only respond to that name. You can configure what name hubot thinks it has, with environment variable HUBOT_NAME or with the `-n` flag when starting the bot. Note that you will run into problems if the name that hubot internally uses is different from the actual display name of the user that hubot uses to connect to Flowdock with. The Flowdock adapter will however try to mitigate the effects of wrong name, but you should still configure it properly.
 
 ## Configuring the Adapter
 
@@ -57,7 +57,7 @@ or a user's email and password as environment variables:
 
 ### Name
 
-Remember to set the bot's name to match the Flowdock login's display name. See "Bot name" above.
+Remember to set the bot's name to match the Flowdock login's display name. See "Bot name" above. You will see warnings in the logs when starting hubot if the name does not match the Flowdock login.
 
 ### Flowdock Login Email
 

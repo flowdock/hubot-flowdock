@@ -61,9 +61,11 @@ class Flowdock extends Adapter
       if message.event == 'user-edit'
         @changeUserNick(message.content.user.id, message.content.user.nick)
       return unless message.event in ['message', 'comment']
+      return if String(@bot.userId) == String(message.user)
+
+      @robot.logger.debug 'Received message', message
 
       author = @userFromId(message.user)
-      return if @robot.name.toLowerCase() == author.name.toLowerCase()
 
       thread_id = message.thread_id
       messageId = if thread_id?
@@ -83,7 +85,7 @@ class Flowdock extends Adapter
       # Reformat leading @mention name to be like "name: message" which is
       # what hubot expects. Add bot name with private messages if not already given.
       botPrefix = "#{@robot.name}: "
-      regex = new RegExp("^@#{@robot.name}(,|\\b)", "i")
+      regex = new RegExp("^@#{@bot.userName}(,|\\b)", "i")
       hubotMsg = msg.replace(regex, botPrefix)
       if !message.flow && !hubotMsg.match(new RegExp("^#{@robot.name}", "i"))
         hubotMsg = botPrefix + hubotMsg
@@ -117,17 +119,27 @@ class Flowdock extends Adapter
       @robot.logger.error("Unexpected error in Flowdock client: #{e}")
       @emit e
 
-    @bot.flows (err, flows) =>
+    @bot.flows (err, flows, res) =>
       return if err?
+      @bot.userId = res.headers['flowdock-user']
       @flows = flows
+      @robot.logger.info("Found #{@flows.length} flows.")
       for flow in flows
         for user in flow.users
           data =
             id: user.id
             name: user.nick
           savedUser = @userFromId user.id, data
-          if (savedUser.name != data.name)
+          if savedUser.name != data.name
             @changeUserNick(savedUser.id, data.name)
+          if String(user.id) == String(@bot.userId)
+            @bot.userName = user.nick
+      @robot.logger.info("Connecting to Flowdock as user #{@bot.userName} (id #{@bot.userId}).")
+      if @robot.name.toLowerCase() != @bot.userName.toLowerCase()
+        @robot.logger.warning(
+          "You have configured this bot to use the wrong name (#{@robot.name}). Flowdock API says " +
+          "my name is #{@bot.userName}. You will run into problems if you don't fix this!")
+
       @connect()
 
     @emit 'connected'
