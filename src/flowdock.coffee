@@ -29,13 +29,15 @@ class Flowdock extends Adapter
         else
           @bot.message flow, str, [], sendRest
       else if user.id
+        # If replying as private message, strip the preceding user tag
+        str = str.replace(new RegExp("^@#{user.name}: ", "i"), '')
         @bot.privateMessage user.id, str, [], sendRest
     else if flow
       @bot.message flow, str, [], sendRest
 
   reply: (envelope, strings...) ->
-    user = @userFromParams(params)
-    @send envelope, strings.map (str) -> "@#{user.name}: #{str}"
+    user = @userFromParams(envelope)
+    @send envelope, strings.map((str) -> "@#{user.name}: #{str}")...
 
   userFromParams: (params) ->
     # hubot < 2.4.2: params = user
@@ -56,7 +58,12 @@ class Flowdock extends Adapter
 
   connect: ->
     ids = (flow.id for flow in @flows)
+    @robot.logger.info('Flowdock: connecting')
     @stream = @bot.stream(ids, active: 'idle', user: 1)
+    @stream.on 'connected', => @robot.logger.info('Flowdock: connected and streaming')
+    @stream.on 'clientError', (error) => @robot.logger.error('Flowdock: client error:', error)
+    @stream.on 'disconnected', => @robot.logger.info('Flowdock: disconnected')
+    @stream.on 'reconnecting', => @robot.logger.info('Flowdock: reconnecting')
     @stream.on 'message', (message) =>
       if message.event == 'user-edit'
         @changeUserNick(message.content.user.id, message.content.user.nick)
