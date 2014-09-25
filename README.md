@@ -42,7 +42,11 @@ Note that by default, hubot will think it is named "Hubot" and will only respond
 
 ## Configuring the Adapter
 
-The Flowdock adapter requires only the following environment variables.
+The Flowdock adapter requires either a user's personal api token (obtainable from [Flowdock account page](https://www.flowdock.com/account/tokens)) as environment variable
+
+    HUBOT_FLOWDOCK_API_TOKEN
+
+or a user's email and password as environment variables:
 
     HUBOT_FLOWDOCK_LOGIN_EMAIL
     HUBOT_FLOWDOCK_LOGIN_PASSWORD

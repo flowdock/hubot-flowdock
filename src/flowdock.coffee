@@ -2,9 +2,6 @@
 flowdock              = require 'flowdock'
 
 class Flowdock extends Adapter
-  constructor: ->
-    @flowsByParametrizedNames = {}
-    super
 
   send: (envelope, strings...) ->
     for str, i in strings
@@ -108,21 +105,22 @@ class Flowdock extends Adapter
       @receive messageObj
 
   run: ->
-    @login_email    = process.env.HUBOT_FLOWDOCK_LOGIN_EMAIL
-    @login_password = process.env.HUBOT_FLOWDOCK_LOGIN_PASSWORD
-    unless @login_email && @login_password
-      console.error "ERROR: No credentials in environment variables HUBOT_FLOWDOCK_LOGIN_EMAIL and HUBOT_FLOWDOCK_LOGIN_PASSWORD"
-      @emit "error", "No credentials"
+    @apiToken      = process.env.HUBOT_FLOWDOCK_API_TOKEN
+    @loginEmail    = process.env.HUBOT_FLOWDOCK_LOGIN_EMAIL
+    @loginPassword = process.env.HUBOT_FLOWDOCK_LOGIN_PASSWORD
+    if @apiToken?
+      @bot = new flowdock.Session(@apiToken)
+    else if @loginEmail? && @loginPassword?
+      @bot = new flowdock.Session(@loginEmail, @loginPassword)
+    else
+      throw new Error("ERROR: No credentials given: Supply either environment variable HUBOT_FLOWDOCK_API_TOKEN or both HUBOT_FLOWDOCK_LOGIN_EMAIL and HUBOT_FLOWDOCK_LOGIN_PASSWORD")
 
-    @bot = new flowdock.Session(@login_email, @login_password)
     @bot.on "error", (e) =>
-      if e == 401
-        console.error "Could not authenticate, please check your credentials"
-      else
-        console.error "Unexpected error in creating Flowdock session: #{e}"
+      @robot.logger.error("Unexpected error in Flowdock client: #{e}")
       @emit e
 
-    @bot.flows (flows) =>
+    @bot.flows (err, flows) =>
+      return if err?
       @flows = flows
       for flow in flows
         for user in flow.users
