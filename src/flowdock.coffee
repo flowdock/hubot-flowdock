@@ -4,40 +4,38 @@ flowdock              = require 'flowdock'
 class Flowdock extends Adapter
 
   send: (envelope, strings...) ->
-    for str, i in strings
-      if str.length > 8096
-        str = "** End of Message Truncated **\n" + str
-        str = str[0...8096]
-        strings[i] = str
+    return if strings.length == 0
+    self = @
+    str = strings.shift()
+    if str.length > 8096
+      str = "** End of Message Truncated **\n" + str
+      str = str[0...8096]
     metadata = envelope.metadata || envelope.message.metadata
     flow = metadata.room
     thread_id = metadata.thread_id
     message_id = metadata.message_id
     user = envelope.user
     forceNewMessage = envelope.newMessage == true
+    sendRest = ->
+      self.send(envelope, strings...)
     if user?
-      for str in strings
-        if flow?
-          if thread_id and not forceNewMessage
-            # respond to a thread
-            @bot.threadMessage flow, thread_id, str
-          else if message_id and not forceNewMessage
-            # respond via comment if we have a parent message
-            @bot.comment flow, message_id, str
-          else
-            @bot.message flow, str
-        else if user.id
-          @bot.privateMessage user.id, str
-    else if envelope.room
-      flow = @flowFromParams(envelope)
-      return new Error("Flow not found") if !flow
-      for str in strings
-        @bot.message flow.id, str
+      if flow?
+        if thread_id and not forceNewMessage
+          # respond to a thread
+          @bot.threadMessage flow, thread_id, str, [], sendRest
+        else if message_id and not forceNewMessage
+          # respond via comment if we have a parent message
+          @bot.comment flow, message_id, str, [], sendRest
+        else
+          @bot.message flow, str, [], sendRest
+      else if user.id
+        @bot.privateMessage user.id, str, [], sendRest
+    else if flow
+      @bot.message flow, str, [], sendRest
 
-  reply: (params, strings...) ->
+  reply: (envelope, strings...) ->
     user = @userFromParams(params)
-    strings.forEach (str) =>
-      @send params, "@#{user.name}: #{str}"
+    @send envelope, strings.map (str) -> "@#{user.name}: #{str}"
 
   userFromParams: (params) ->
     # hubot < 2.4.2: params = user
