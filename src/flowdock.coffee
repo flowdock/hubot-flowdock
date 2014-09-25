@@ -6,30 +6,33 @@ class Flowdock extends Adapter
     @flowsByParametrizedNames = {}
     super
 
-  send: (params, strings...) ->
+  send: (envelope, strings...) ->
     for str, i in strings
       if str.length > 8096
         str = "** End of Message Truncated **\n" + str
         str = str[0...8096]
         strings[i] = str
-
-    if params.user
-      user = @userFromParams(params)
-
+    metadata = envelope.metadata || envelope.message.metadata
+    flow = metadata.room
+    thread_id = metadata.thread_id
+    message_id = metadata.message_id
+    user = envelope.user
+    forceNewMessage = envelope.newMessage == true
+    if user?
       for str in strings
-        if user.flow
-          if user.thread_id
+        if flow?
+          if thread_id and not forceNewMessage
             # respond to a thread
-            @bot.threadMessage user.flow, user.thread_id, str
-          else if user.message and not (params.newMessage? and params.newMessage)
+            @bot.threadMessage flow, thread_id, str
+          else if message_id and not forceNewMessage
             # respond via comment if we have a parent message
-            @bot.comment user.flow, user.message, str
+            @bot.comment flow, message_id, str
           else
-            @bot.message user.flow, str
+            @bot.message flow, str
         else if user.id
           @bot.privateMessage user.id, str
-    else if params.room
-      flow = @flowFromParams(params)
+    else if envelope.room
+      flow = @flowFromParams(envelope)
       return new Error("Flow not found") if !flow
       for str in strings
         @bot.message flow.id, str
@@ -63,25 +66,22 @@ class Flowdock extends Adapter
       if message.event == 'user-edit'
         @changeUserNick(message.content.user.id, message.content.user.nick)
       return unless message.event in ['message', 'comment']
-      if message.event == 'message'
-        messageId = message.id
+
+      author = @userFromId(message.user)
+      return if @robot.name.toLowerCase() == author.name.toLowerCase()
+
+      thread_id = message.thread_id
+      messageId = if thread_id?
+        undefined
+      else if message.event == 'message'
+        message.id
       else
         # For comments the parent message id is embedded in an 'influx' tag
         if message.tags
           influxTag = do ->
             for tag in message.tags
               return tag if /^influx:/.test tag
-          messageId = (influxTag.split ':', 2)[1] if influxTag
-
-      author =
-        id: message.user
-        name: @userFromId(message.user).name
-        flow: message.flow
-
-      author['message'] = messageId if messageId
-      author['thread_id'] = message.thread_id
-
-      return if @robot.name.toLowerCase() == author.name.toLowerCase()
+          (influxTag.split ':', 2)[1] if influxTag
 
       msg = if message.event == 'comment' then message.content.text else message.content
 
@@ -92,8 +92,20 @@ class Flowdock extends Adapter
       hubotMsg = msg.replace(regex, botPrefix)
       if !message.flow && !hubotMsg.match(new RegExp("^#{@robot.name}", "i"))
         hubotMsg = botPrefix + hubotMsg
-      author.room = message.flow
-      @receive new TextMessage(author, hubotMsg)
+
+      author.room = message.flow # Many scripts expect author.room to be available
+      author.flow = message.flow # For backward compatibility
+
+      metadata =
+        room: message.flow
+      metadata['thread_id'] = thread_id if thread_id?
+      metadata['message_id'] = messageId if messageId?
+
+      messageObj = new TextMessage(author, hubotMsg, message.id, metadata)
+      # Support metadata even if hubot does not currently do that
+      messageObj.metadata = metadata if !messageObj.metadata?
+
+      @receive messageObj
 
   run: ->
     @login_email    = process.env.HUBOT_FLOWDOCK_LOGIN_EMAIL
@@ -121,8 +133,6 @@ class Flowdock extends Adapter
           if (savedUser.name != data.name)
             @changeUserNick(savedUser.id, data.name)
       @connect()
-
-    @bot
 
     @emit 'connected'
 
