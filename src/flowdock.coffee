@@ -69,7 +69,10 @@ class Flowdock extends Adapter
       author = @userFromId(message.user)
       return if @robot.name.toLowerCase() == author.name.toLowerCase()
 
-      messageId = if message.event == 'message'
+      thread_id = message.thread_id
+      messageId = if thread_id?
+        undefined
+      else if message.event == 'message'
         message.id
       else
         # For comments the parent message id is embedded in an 'influx' tag
@@ -94,8 +97,8 @@ class Flowdock extends Adapter
 
       metadata =
         room: message.flow
-      metadata['message_id'] = messageId if messageId
-      metadata['thread_id'] = message.thread_id if message.thread_id
+      metadata['thread_id'] = thread_id if thread_id?
+      metadata['message_id'] = messageId if messageId?
 
       messageObj = new TextMessage(author, hubotMsg, message.id, metadata)
       # Support metadata even if hubot does not currently do that
