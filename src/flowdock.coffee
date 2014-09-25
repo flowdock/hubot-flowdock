@@ -12,14 +12,15 @@ class Flowdock extends Adapter
         str = "** End of Message Truncated **\n" + str
         str = str[0...8096]
         strings[i] = str
-    flow = envelope.metadata.room
-    thread_id = envelope.metadata.thread_id
-    message_id = envelope.metadata.message_id
+    metadata = envelope.metadata || envelope.message.metadata
+    flow = metadata.room
+    thread_id = metadata.thread_id
+    message_id = metadata.message_id
     user = envelope.user
     forceNewMessage = envelope.newMessage == true
     if user?
       for str in strings
-        if flow
+        if flow?
           if thread_id and not forceNewMessage
             # respond to a thread
             @bot.threadMessage flow, thread_id, str
@@ -132,8 +133,6 @@ class Flowdock extends Adapter
           if (savedUser.name != data.name)
             @changeUserNick(savedUser.id, data.name)
       @connect()
-
-    @bot
 
     @emit 'connected'
 
