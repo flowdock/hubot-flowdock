@@ -118,7 +118,7 @@ class Flowdock extends Adapter
         console.error "Unexpected error in creating Flowdock session: #{e}"
       @emit e
 
-    @bot.flows (flows, response) =>
+    @bot.flows (flows) =>
       @flows = flows
       for flow in flows
         for user in flow.users
