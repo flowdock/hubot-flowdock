@@ -51,9 +51,21 @@ or a user's email and password as environment variables:
     HUBOT_FLOWDOCK_LOGIN_EMAIL
     HUBOT_FLOWDOCK_LOGIN_PASSWORD
 
+Optional configuration:
+
     # Heroku specific: to enable the keep-alive functionality for Hubot > 2.1.4.
     # More info at https://github.com/github/hubot/pull/270.
     HEROKU_URL
+
+    # Bot name, optionally you can give it with `-n Name` when starting the bot
+    HUBOT_NAME
+
+    # By default, Hubot will not respond to (or even see) chat messages sent using
+    # a flow api token and external_user_name. If you are really sure this is something
+    # you need and realize that this allows ANYONE to send anonymous commands to
+    # your Hubot if they know your flow api token, you can allow them by setting
+    # the following env to 1.
+    HUBOT_FLOWDOCK_ALLOW_ANONYMOUS_COMMANDS=1
 
 ### Name
 

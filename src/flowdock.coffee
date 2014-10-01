@@ -69,6 +69,8 @@ class Flowdock extends Adapter
         @changeUserNick(message.content.user.id, message.content.user.nick)
       return unless message.event in ['message', 'comment']
       return if String(@bot.userId) == String(message.user)
+      # Make sure hubot does not see commands posted using only a flow token (eg. no authenticated user)
+      return if String(message.user) == '0' && process.env.HUBOT_FLOWDOCK_ALLOW_ANONYMOUS_COMMANDS != '1'
 
       @robot.logger.debug 'Received message', message
 
