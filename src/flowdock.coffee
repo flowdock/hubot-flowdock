@@ -10,8 +10,8 @@ class Flowdock extends Adapter
     if str.length > 8096
       str = "** End of Message Truncated **\n" + str
       str = str[0...8096]
-    metadata = envelope.metadata || envelope.message.metadata
-    flow = metadata.room
+    metadata = envelope.metadata || envelope.message?.metadata || {}
+    flow = metadata.room || envelope.room
     thread_id = metadata.thread_id
     message_id = metadata.message_id
     user = envelope.user
