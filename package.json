@@ -1,6 +1,6 @@
 {
   "name": "hubot-flowdock",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "author": {
     "name": "Flowdock",
     "url": "https://www.flowdock.com/"
@@ -40,7 +40,7 @@
     "email": "team@flowdock.com"
   },
   "dependencies": {
-    "flowdock": "^0.8.1"
+    "flowdock": "^0.8.2"
   },
   "devDependencies": {
     "coffee-script": ">=1.2.0"
