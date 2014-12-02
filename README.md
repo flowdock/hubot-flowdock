@@ -105,6 +105,17 @@ If you need to access data about flows, you can find them in `robot.adapter.flow
 
 By default hubot will always respond to the same thread that the message that caused the response was in. In scripts you can override this by setting `msg.envelope.newMessage = true`.
 
+## Extending hubot-flowdock
+
+### Undo or message deletion
+
+A couple of scripts exist if you want to add an undo or message deletion capabilities to hubot:
+
+* [abort.coffee](https://gist.github.com/brentc/63ce932e6c0dd8ea3b7a) by [@brentc](https://github.com/brentc)
+* [hubot-flowdock-delete-message](https://github.com/cdoughty77/hubot-flowdock-delete-message) by [@cdoughty77](https://github.com/cdoughty77)
+
+They both allow you to tell hubot to delete some of its previous messages from Flowdock. This can be useful if they contain secrets or inappropriate content and you want to remove them. See the source or readme of the scripts for usage. For a brief discussion about the background see [#67](https://github.com/flowdock/hubot-flowdock/issues/67).
+
 ## License
 
 MIT
