@@ -40,6 +40,10 @@ you will need to use `-a flowdock` when running your hubot.
 
 Note that by default, hubot will think its name is "Hubot" and will only respond to that name. You can configure what name hubot thinks it has, with environment variable HUBOT_NAME or with the `-n` flag when starting the bot. Note that you will run into problems if the name that hubot internally uses is different from the actual display name of the user that hubot uses to connect to Flowdock with. The Flowdock adapter will however try to mitigate the effects of wrong name, but you should still configure it properly.
 
+### Join flows
+
+Note that hubot cannot join any flows on its own. You need to either log into Flowdock with the Hubot user and join some Flows, or add the bot to the desired flows using another user.
+
 ## Configuring the Adapter
 
 The Flowdock adapter requires either a user's personal api token (obtainable from [Flowdock account page](https://www.flowdock.com/account/tokens)) as environment variable
