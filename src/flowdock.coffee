@@ -144,7 +144,11 @@ class Flowdock extends Adapter
           if String(user.id) == String(@bot.userId)
             @bot.userName = user.nick
       @robot.logger.info("Connecting to Flowdock as user #{@bot.userName} (id #{@bot.userId}).")
-      if @robot.name.toLowerCase() != @bot.userName.toLowerCase()
+      if @flows.length == 0 || !@flows.some((flow) -> flow.open)
+        @robot.logger.warning(
+          "Your bot is not part of any flows and probably won't do much. " +
+          "Join some flows manually or add the bot to some flows and reconnect.")
+      if @bot.userName? && @robot.name.toLowerCase() != @bot.userName.toLowerCase()
         @robot.logger.warning(
           "You have configured this bot to use the wrong name (#{@robot.name}). Flowdock API says " +
           "my name is #{@bot.userName}. You will run into problems if you don't fix this!")
