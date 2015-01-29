@@ -56,6 +56,19 @@ class Flowdock extends Adapter
     if id of @robot.brain.data.users
       @robot.brain.data.users[id].name = newNick
 
+  needsReconnect: (message) ->
+    (@myId(message.content) && message.event == 'backend.user.block') ||
+    (@myId(message.user) && message.event in ['backend.user.join', 'flow-add', 'flow-remove'])
+
+  myId: (id) ->
+    String(id) == String(@bot.userId)
+
+  reconnect: (reason) ->
+    @robot.logger.info("Reconnecting: #{reason}")
+    @stream.end()
+    @stream.off()
+    @fetchFlowsAndConnect()
+
   connect: ->
     ids = (flow.id for flow in @flows)
     @robot.logger.info('Flowdock: connecting')
@@ -67,8 +80,10 @@ class Flowdock extends Adapter
     @stream.on 'message', (message) =>
       if message.event == 'user-edit' || message.event == 'backend.user.join'
         @changeUserNick(message.content.user.id, message.content.user.nick)
+      if @needsReconnect(message)
+        @reconnect('Reloading flow list')
       return unless message.event in ['message', 'comment']
-      return if String(@bot.userId) == String(message.user)
+      return if @myId(message.user)
       # Make sure hubot does not see commands posted using only a flow token (eg. no authenticated user)
       return if String(message.user) == '0' && process.env.HUBOT_FLOWDOCK_ALLOW_ANONYMOUS_COMMANDS != '1'
 
@@ -128,6 +143,11 @@ class Flowdock extends Adapter
       @robot.logger.error("Unexpected error in Flowdock client: #{e}")
       @emit e
 
+    @fetchFlowsAndConnect()
+
+    @emit 'connected'
+
+  fetchFlowsAndConnect: ->
     @bot.flows (err, flows, res) =>
       return if err?
       @bot.userId = res.headers['flowdock-user']
@@ -154,8 +174,6 @@ class Flowdock extends Adapter
           "my name is #{@bot.userName}. You will run into problems if you don't fix this!")
 
       @connect()
-
-    @emit 'connected'
 
 exports.use = (robot) ->
   new Flowdock robot
