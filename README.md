@@ -44,6 +44,10 @@ Note that by default, hubot will think its name is "Hubot" and will only respond
 
 Note that hubot cannot join any flows on its own. You need to either log into Flowdock with the Hubot user and join some Flows, or add the bot to the desired flows using another user.
 
+### Adding / removing from flows
+
+Hubot will automatically reconnect when you add or remove it from a flow.
+
 ## Configuring the Adapter
 
 The Flowdock adapter requires either a user's personal api token (obtainable from [Flowdock account page](https://www.flowdock.com/account/tokens)) as environment variable
@@ -70,6 +74,10 @@ Optional configuration:
     # your Hubot if they know your flow api token, you can allow them by setting
     # the following env to 1.
     HUBOT_FLOWDOCK_ALLOW_ANONYMOUS_COMMANDS=1
+
+    # You can ignore users (for example if you have other bots) with the following
+    # environment variable by giving a comma separated list of user ids.
+    HUBOT_FLOWDOCK_IGNORED_USERS=123,456,789
 
 ### Name
 
