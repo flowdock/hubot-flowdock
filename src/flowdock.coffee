@@ -65,7 +65,7 @@ class Flowdock extends Adapter
     @stream.on 'disconnected', => @robot.logger.info('Flowdock: disconnected')
     @stream.on 'reconnecting', => @robot.logger.info('Flowdock: reconnecting')
     @stream.on 'message', (message) =>
-      if message.event == 'user-edit'
+      if message.event == 'user-edit' || message.event == 'backend.user.join'
         @changeUserNick(message.content.user.id, message.content.user.nick)
       return unless message.event in ['message', 'comment']
       return if String(@bot.userId) == String(message.user)
