@@ -3,6 +3,17 @@ flowdock              = require 'flowdock'
 
 class Flowdock extends Adapter
 
+  constructor: ->
+    super
+    @ignores = []
+    # Make sure hubot does not see commands posted using only a flow token (eg. no authenticated user)
+    if process.env.HUBOT_FLOWDOCK_ALLOW_ANONYMOUS_COMMANDS != '1'
+      @ignores.push('0')
+    # Make it possible to ignore users
+    if process.env.HUBOT_FLOWDOCK_IGNORED_USERS?
+      @ignores.push(id) for id in process.env.HUBOT_FLOWDOCK_IGNORED_USERS.split(',')
+    @robot.logger.info "Ignoring all messages from user ids #{@ignores.join(', ')}" if @ignores.length > 0
+
   send: (envelope, strings...) ->
     return if strings.length == 0
     self = @
@@ -84,8 +95,7 @@ class Flowdock extends Adapter
         @reconnect('Reloading flow list')
       return unless message.event in ['message', 'comment']
       return if @myId(message.user)
-      # Make sure hubot does not see commands posted using only a flow token (eg. no authenticated user)
-      return if String(message.user) == '0' && process.env.HUBOT_FLOWDOCK_ALLOW_ANONYMOUS_COMMANDS != '1'
+      return if String(message.user) in @ignores
 
       @robot.logger.debug 'Received message', message
 
