@@ -77,7 +77,7 @@ class Flowdock extends Adapter
   reconnect: (reason) ->
     @robot.logger.info("Reconnecting: #{reason}")
     @stream.end()
-    @stream.off()
+    @stream.removeAllListeners()
     @fetchFlowsAndConnect()
 
   connect: ->
