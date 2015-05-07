@@ -70,6 +70,9 @@ class Flowdock extends Adapter
   flowPath: (flow) ->
     flow.organization.parameterized_name + '/' + flow.parameterized_name
 
+  joinedFlows: ->
+    @flows.filter (f) -> f.joined && f.open
+
   userFromId: (id, data) ->
     # hubot < 2.5.0: @userForId
     # hubot >=2.5.0: @robot.brain.userForId
@@ -93,10 +96,12 @@ class Flowdock extends Adapter
     @fetchFlowsAndConnect()
 
   connect: ->
-    ids = (flow.id for flow in @flows)
+    ids = (flow.id for flow in @joinedFlows())
     @robot.logger.info('Flowdock: connecting')
     @stream = @bot.stream(ids, active: 'idle', user: 1)
-    @stream.on 'connected', => @robot.logger.info('Flowdock: connected and streaming')
+    @stream.on 'connected', =>
+      @robot.logger.info('Flowdock: connected and streaming')
+      @robot.logger.info('Flowdock: listening to flows:', (flow.name for flow in @joinedFlows()).join(', '))
     @stream.on 'clientError', (error) => @robot.logger.error('Flowdock: client error:', error)
     @stream.on 'disconnected', => @robot.logger.info('Flowdock: disconnected')
     @stream.on 'reconnecting', => @robot.logger.info('Flowdock: reconnecting')
@@ -175,7 +180,7 @@ class Flowdock extends Adapter
       return if err?
       @bot.userId = res.headers['flowdock-user']
       @flows = flows
-      @robot.logger.info("Found #{@flows.length} flows.")
+      @robot.logger.info("Found #{@flows.length} flows, and I have joined #{@joinedFlows().length} of them.")
       for flow in flows
         for user in flow.users
           data =
