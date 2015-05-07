@@ -117,6 +117,10 @@ If you need to access data about flows, you can find them in `robot.adapter.flow
 
 By default hubot will always respond to the same thread that the message that caused the response was in. In scripts you can override this by setting `msg.envelope.newMessage = true`.
 
+### `robot.messageRoom`
+
+If you use `robot.messageRoom`, it's advised to use the proper flow id as the `room` parameter. However, you can use the flow path too (org/flow that's also visible in web urls) or the flow name. However, if you use the flow name, there's no quarantees that those are really unique especially if you run your bot in multiple organizations.
+
 ## Extending hubot-flowdock
 
 ### Undo or message deletion
