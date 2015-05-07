@@ -48,6 +48,8 @@ class Flowdock extends Adapter
         str = str.replace(new RegExp("^@#{user.name}: ", "i"), '')
         @bot.privateMessage user.id, str, [], sendRest
     else if flow
+      # support wider range of flow identifiers than just id for robot.messageRoom
+      flow = @findFlow(flow)
       @bot.message flow, str, [], sendRest
 
   reply: (envelope, strings...) ->
@@ -59,8 +61,14 @@ class Flowdock extends Adapter
     # hubot >= 2.4.2: params = {user: user, ...}
     if params.user then params.user else params
 
-  flowFromParams: (params) ->
-    return flow for flow in @flows when params.room == flow.id
+  findFlow: (identifier) ->
+    return flow.id for flow in @flows when identifier == flow.id
+    return flow.id for flow in @flows when identifier == @flowPath(flow)
+    return flow.id for flow in @flows when identifier.toLowerCase() == flow.name.toLowerCase()
+    identifier
+
+  flowPath: (flow) ->
+    flow.organization.parameterized_name + '/' + flow.parameterized_name
 
   userFromId: (id, data) ->
     # hubot < 2.5.0: @userForId
