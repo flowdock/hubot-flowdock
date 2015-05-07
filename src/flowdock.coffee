@@ -1,5 +1,9 @@
-{Adapter,TextMessage} = require 'hubot'
-flowdock              = require 'flowdock'
+flowdock = require 'flowdock'
+try
+  {Adapter,TextMessage} = require 'hubot'
+catch
+  prequire = require 'parent-require'
+  {Adapter, TextMessage} = prequire 'hubot'
 
 class Flowdock extends Adapter
 
