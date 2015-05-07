@@ -19,7 +19,7 @@ You should report any issues or submit any pull requests to the
 
 ## Getting Started
 
-First, create your own hubot template by using [the getting started instructions](https://github.com/github/hubot/blob/master/docs/README.md) of the hubot repository.
+First, create your own hubot template by using [the getting started instructions](https://github.com/github/hubot/blob/master/README.md) of the hubot repository.
 
 Then you will need to edit the `package.json` for your hubot and add the
 `hubot-flowdock` adapter dependency.
