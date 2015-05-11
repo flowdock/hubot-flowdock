@@ -1,6 +1,6 @@
 # A [Hubot](https://github.com/github/hubot) adapter for [Flowdock](https://www.flowdock.com)
 
-[Flowdock](https://www.flowdock.com/) is a web based collabration and chat app. It integrates nicely with GitHub, Pivotal Tracker, Twitter, JIRA, Confluence, most CI systems and even email.
+[Flowdock](https://www.flowdock.com/) is a web based collabration and chat app. It integrates nicely with GitHub, Rally, Pivotal Tracker, Twitter, JIRA, Confluence, most CI systems and even email.
 
 You should report any issues or submit any pull requests to the
 [Flowdock adapter](https://github.com/flowdock/hubot-flowdock) repository.
