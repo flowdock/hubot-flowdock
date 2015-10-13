@@ -183,14 +183,15 @@ class Flowdock extends Adapter
       @robot.logger.info("Found #{@flows.length} flows, and I have joined #{@joinedFlows().length} of them.")
       for flow in flows
         for user in flow.users
-          data =
-            id: user.id
-            name: user.nick
-          savedUser = @userFromId user.id, data
-          if savedUser.name != data.name
-            @changeUserNick(savedUser.id, data.name)
-          if String(user.id) == String(@bot.userId)
-            @bot.userName = user.nick
+          if user.in_flow
+            data =
+              id: user.id
+              name: user.nick
+            savedUser = @userFromId user.id, data
+            if savedUser.name != data.name
+              @changeUserNick(savedUser.id, data.name)
+            if String(user.id) == String(@bot.userId)
+              @bot.userName = user.nick
       @robot.logger.info("Connecting to Flowdock as user #{@bot.userName} (id #{@bot.userId}).")
       if @flows.length == 0 || !@flows.some((flow) -> flow.open)
         @robot.logger.warning(
