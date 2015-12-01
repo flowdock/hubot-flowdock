@@ -119,7 +119,13 @@ By default hubot will always respond to the same thread that the message that ca
 
 ### `robot.messageRoom`
 
-If you use `robot.messageRoom`, it's advised to use the proper flow id as the `room` parameter. However, you can use the flow path too (org/flow that's also visible in web urls) or the flow name. However, if you use the flow name, there's no quarantees that those are really unique especially if you run your bot in multiple organizations.
+To send a message to a particular flow, use `robot.messageRoom(room, message)`, where `room` can be one of:
+
+- ID of the flow
+- Organization and flow joined by a slash, e.g. `acme/someflow`
+- Flow name
+
+It's advised to use the proper flow id as the `room` parameter. However, if you use the flow name, there are guarantees that those are really unique especially if you run your bot in multiple organizations.
 
 ## Extending hubot-flowdock
 
