@@ -108,9 +108,11 @@ class Flowdock extends Adapter
     @stream.on 'message', (message) =>
       if @needsReconnect(message)
         @reconnect('Reloading flow list')
+      if (@myId(message.user) && message.event in ['backend.user.join', 'flow-add'])
+        @robot.emit "flow-add", { id: message.content.id, name: message.content.name }
       return if !message.content? || !message.event? || !message.id?
       if message.event == 'user-edit' || message.event == 'backend.user.join'
-        @changeUserNick(message.content.user.id, message.content.user.nick)      
+        @changeUserNick(message.content.user.id, message.content.user.nick)
       return unless message.event in ['message', 'comment']
       return if @myId(message.user)
       return if String(message.user) in @ignores
