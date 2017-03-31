@@ -70,6 +70,9 @@ class Flowdock extends Adapter
   flowPath: (flow) ->
     flow.organization.parameterized_name + '/' + flow.parameterized_name
 
+  flowFromParams: (params) ->
+    return flow for flow in @flows when params.room == flow.id
+
   joinedFlows: ->
     @flows.filter (f) -> f.joined && f.open
 
