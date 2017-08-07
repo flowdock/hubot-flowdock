@@ -152,6 +152,7 @@ class Flowdock extends Adapter
         room: message.flow
       metadata['thread_id'] = thread_id if thread_id?
       metadata['message_id'] = messageId if messageId?
+      metadata['tags'] = message.tags if message.tags?
 
       messageObj = new TextMessage(author, hubotMsg, message.id, metadata)
       # Support metadata even if hubot does not currently do that
